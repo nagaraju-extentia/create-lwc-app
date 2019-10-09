@@ -8,6 +8,8 @@ interface ResourceFolder {
 interface Config {
     // Default directory for the build output
     buildDir: string
+    // Default build type (webpack|rollup)
+    buildType: string
     // Default mode for build command
     mode: string
     // Clears the build directory on every build
@@ -58,6 +60,8 @@ interface Config {
 export const defaultLwcConfig: Config = {
     // Default directory for the build output
     buildDir: './dist',
+    // Default build type (webpack|rollup)
+    buildType: 'webpack',
     // Default mode for build command
     mode: 'development',
     // Clears the build directory on every build

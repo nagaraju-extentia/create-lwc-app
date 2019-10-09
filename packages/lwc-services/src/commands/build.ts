@@ -61,6 +61,15 @@ export default class Build extends Command {
         webpack: flags.string({
             char: 'w',
             description: messages.flags.webpack
+        }),
+        rollup: flags.string({
+            char: 'w',
+            description: messages.flags.rollup
+        }),
+        type: flags.string({
+            char: 't',
+            description: messages.flags.type,
+            default: lwcConfig.buildType
         })
     }
 
@@ -91,49 +100,52 @@ export default class Build extends Command {
             }
         }
 
-        // Check if custom webpack config is passed, and if it really exists.
-        if (flags.webpack) {
-            if (!fs.existsSync(flags.webpack)) {
-                log(messages.errors.no_webpack)
-                return
-            }
-        }
-
         log(messages.logs.creating_build_configuration)
 
-        let webpackConfigCustom: any
+        if (flags.type === 'webpack') {
+            // Check if custom webpack config is passed, and if it really exists.
+            if (flags.webpack) {
+                if (!fs.existsSync(flags.webpack)) {
+                    log(messages.errors.no_webpack)
+                    return
+                }
+            }
 
-        if (flags.webpack) {
-            log(messages.logs.custom_configuration)
-            webpackConfigCustom = require(path.resolve(
-                process.cwd(),
-                flags.webpack
-            ))
-        }
-        const webpackConfig = generateWebpackConfig(
-            flags.mode,
-            webpackConfigCustom
-        )
+            let webpackConfigCustom: any
 
-        log(messages.logs.build_start)
-
-        if (flags.mode && flags.mode !== lwcConfig.mode) {
-            webpackConfig.mode = flags.mode
-        }
-
-        if (flags.destination && flags.destination !== lwcConfig.buildDir) {
-            webpackConfig.output.path = path.resolve(
-                process.cwd(),
-                flags.destination
+            if (flags.webpack) {
+                log(messages.logs.custom_configuration)
+                webpackConfigCustom = require(path.resolve(
+                    process.cwd(),
+                    flags.webpack
+                ))
+            }
+            const webpackConfig = generateWebpackConfig(
+                flags.mode,
+                webpackConfigCustom
             )
-        }
 
-        try {
-            await buildWebpack(webpackConfig)
-            log(messages.logs.build_end)
-        } catch (error) {
-            log({ message: error, emoji: 'sos' })
-            process.exit(1)
+            log(messages.logs.build_start)
+
+            if (flags.mode && flags.mode !== lwcConfig.mode) {
+                webpackConfig.mode = flags.mode
+            }
+
+            if (flags.destination && flags.destination !== lwcConfig.buildDir) {
+                webpackConfig.output.path = path.resolve(
+                    process.cwd(),
+                    flags.destination
+                )
+            }
+
+            try {
+                await buildWebpack(webpackConfig)
+                log(messages.logs.build_end)
+            } catch (error) {
+                log({ message: error, emoji: 'sos' })
+                process.exit(1)
+            }
+        } else if (flags.type === 'rollup') {
         }
     }
 }

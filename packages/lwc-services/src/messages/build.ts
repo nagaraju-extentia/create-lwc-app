@@ -3,14 +3,17 @@ export const messages = {
     help: {
         examples: [
             'lwc-services build',
-            'lwc-services build -d ./public --noclear'
+            'lwc-services build -d ./public --noclear',
+            'lwc-services build --type rollup'
         ]
     },
     flags: {
         mode: 'defines the mode for the build (production|development)',
         destination: 'defines the directory where the build is stored',
         noclear: 'setting this will not re-create the build dir',
-        webpack: 'location of custom webpack configuration file'
+        webpack: 'location of custom webpack configuration file',
+        rollup: 'location of custom rollup configuration file',
+        type: 'type of the build (webpack|rollup)'
     },
     errors: {
         no_compilation: {
