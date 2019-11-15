@@ -3,11 +3,9 @@ const compiler = require('@lwc/compiler')
 const babel = require('@babel/core')
 
 import { lwcConfig } from '../../config/lwcConfig'
-const productionConfig = lwcConfig.lwcCompilerOutput.production
 const stylesheetConfig = lwcConfig.lwcCompilerStylesheetConfig
 const experimentalDynamicComponent = lwcConfig.lwcExperimentalDynamicComponent
 
-const __PROD__ = process.env.NODE_ENV === 'production'
 
 const { getConfig, getInfoFromPath } = require('./module')
 
@@ -26,7 +24,12 @@ module.exports = function(source: any) {
         }
     }
 
-    const compilerOutput = config.mode ? productionConfig : {}
+    let compilerOutput: any = {};
+    if (config.mode === 'development' && lwcConfig.lwcCompilerOutput && lwcConfig.lwcCompilerOutput) {
+        compilerOutput = lwcConfig.lwcCompilerOutput.development;
+    } else if (config.mode === 'production' && lwcConfig.lwcCompilerOutput && lwcConfig.lwcCompilerOutput.production) {
+        compilerOutput = lwcConfig.lwcCompilerOutput.production;
+    }
 
     let codeTransformed = source
 
