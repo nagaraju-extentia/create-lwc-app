@@ -6,7 +6,10 @@ import * as path from 'path'
 const npms = Object.values(npmmodules).map((f: any) => path.dirname(f.entry))
 const ModuleResolver = require('./module-resolver')
 const moduleLoader = require.resolve('./module-loader')
-
+const CSS_LOADER = {
+    test: /node_modules.*css$/,
+    use: ['style-loader', 'css-loader']
+}
 const JS_LOADER = {
     test: /\.js$/,
     exclude: /(node_modules|modules|lwc)/,
@@ -73,9 +76,9 @@ function getWebpackEntryPaths(
         return entry
     }
 
-    let paths: string[] = []
+    const paths: string[] = []
     Object.keys(entry).forEach(name => {
-        let path = entry[name]
+        const path = entry[name]
         if (typeof path === 'string') {
             paths.push(path)
         } else {
@@ -131,11 +134,14 @@ function buildWebpackConfig({
                             loader: moduleLoader,
                             options: {
                                 module: MODULE_CONFIG,
-                                mode: isProduction ? 'production' : 'development'
+                                mode: isProduction
+                                    ? 'production'
+                                    : 'development'
                             }
                         }
                     ]
                 },
+                CSS_LOADER,
                 JS_LOADER,
                 TS_LOADER
             ]
@@ -170,7 +176,7 @@ function buildWebpackConfig({
         return serverConfig
     }
 
-    let entryPaths = getWebpackEntryPaths(serverConfig.entry)
+    const entryPaths = getWebpackEntryPaths(serverConfig.entry)
     const lwcModuleResolver = {
         resolve: {
             extensions: ['.js', '.ts', '.json'],
