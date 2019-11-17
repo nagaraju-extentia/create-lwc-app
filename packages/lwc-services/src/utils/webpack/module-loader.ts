@@ -60,6 +60,13 @@ module.exports = function(source: any) {
     // @ts-ignore
     const cb = this.async()
 
+    if (resourcePath.endsWith('.css')) {
+        if (resourcePath.indexOf('node_modules') > -1) {
+            cb(null, codeTransformed)
+            return
+        }
+    }
+
     compiler
         .transform(codeTransformed, resourcePath, {
             name: info.name,
