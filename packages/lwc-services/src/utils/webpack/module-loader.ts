@@ -6,7 +6,6 @@ import { lwcConfig } from '../../config/lwcConfig'
 const stylesheetConfig = lwcConfig.lwcCompilerStylesheetConfig
 const experimentalDynamicComponent = lwcConfig.lwcExperimentalDynamicComponent
 
-
 const { getConfig, getInfoFromPath } = require('./module')
 
 module.exports = function(source: any) {
@@ -24,17 +23,25 @@ module.exports = function(source: any) {
         }
     }
 
-    let compilerOutput: any = {};
-    if (config.mode === 'development' && lwcConfig.lwcCompilerOutput && lwcConfig.lwcCompilerOutput) {
-        compilerOutput = lwcConfig.lwcCompilerOutput.development;
-    } else if (config.mode === 'production' && lwcConfig.lwcCompilerOutput && lwcConfig.lwcCompilerOutput.production) {
-        compilerOutput = lwcConfig.lwcCompilerOutput.production;
+    let compilerOutput: any = {}
+    if (
+        config.mode === 'development' &&
+        lwcConfig.lwcCompilerOutput &&
+        lwcConfig.lwcCompilerOutput
+    ) {
+        compilerOutput = lwcConfig.lwcCompilerOutput.development
+    } else if (
+        config.mode === 'production' &&
+        lwcConfig.lwcCompilerOutput &&
+        lwcConfig.lwcCompilerOutput.production
+    ) {
+        compilerOutput = lwcConfig.lwcCompilerOutput.production
     }
 
     let codeTransformed = source
 
     if (resourcePath.endsWith('.ts')) {
-        let { code } = babel.transform(source, {
+        const { code } = babel.transform(source, {
             filename: resourcePath,
             plugins: [
                 require.resolve('@babel/plugin-syntax-class-properties'),

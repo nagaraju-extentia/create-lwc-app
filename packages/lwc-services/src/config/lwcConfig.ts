@@ -50,7 +50,7 @@ interface Config {
                 NODE_ENV: string
             }
             format?: string
-        },
+        }
         production?: {
             compat?: boolean
             minify?: boolean
